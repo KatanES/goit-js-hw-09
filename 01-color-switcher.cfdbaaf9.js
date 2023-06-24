@@ -1,2 +1,0 @@
-document.addEventListener("DOMContentLoaded",function(){var t=document.body,e=document.querySelector("button[data-start]"),n=document.querySelector("button[data-stop]"),o=null,a=!1;function d(){a||(t.style.backgroundColor="#".concat(Math.floor(16777215*Math.random()).toString(16).padStart(6,"0")))}e.addEventListener("click",function(){a||(a=!0,o=setInterval(d,1e3),e.disabled=!0)}),n.addEventListener("click",function(){a&&(a=!1,clearInterval(o),e.disabled=!1)})});
-//# sourceMappingURL=01-color-switcher.cfdbaaf9.js.map
