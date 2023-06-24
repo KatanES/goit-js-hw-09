@@ -12,9 +12,6 @@ document.addEventListener('DOMContentLoaded', function () {
   let isActive = false;
 
   function changeBackgroundColor() {
-    if (isActive) {
-      return;
-    }
     body.style.backgroundColor = getRandomHexColor();
   }
 
@@ -23,6 +20,7 @@ document.addEventListener('DOMContentLoaded', function () {
       isActive = true;
       intervalId = setInterval(changeBackgroundColor, 1000);
       changeColorButton.disabled = true;
+      stopColorButton.disabled = false;
     }
   }
 
@@ -31,6 +29,7 @@ document.addEventListener('DOMContentLoaded', function () {
       isActive = false;
       clearInterval(intervalId);
       changeColorButton.disabled = false;
+      stopColorButton.disabled = true;
     }
   }
 
