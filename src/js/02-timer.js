@@ -1,115 +1,86 @@
-// Описаний в документації
 import flatpickr from 'flatpickr';
-// Додатковий імпорт стилів
 import 'flatpickr/dist/flatpickr.min.css';
 
-// const input = document.getElementById('datetime-picker');
+const datePicker = document.getElementById('datetime-picker');
+const startButton = document.querySelector('[data-start]');
+const daysElement = document.querySelector('[data-days]');
+const hoursElement = document.querySelector('[data-hours]');
+const minutesElement = document.querySelector('[data-minutes]');
+const secondsElement = document.querySelector('[data-seconds]');
 
-// const options = {
-//   enableTime: true,
-//   time_24hr: true,
-//   defaultDate: new Date(),
-//   minuteIncrement: 1,
-//   onClose(selectedDates) {
-//     const selectedDate = selectedDates[0];
-//     if (selectedDate < new Date()) {
-//       window.alert('Please choose a date in the future');
-//       changeColorButton.disabled = true;
-//     } else {
-//       changeColorButton.disabled = false;
-//     }
-//   },
-// };
+let countdownInterval;
 
-// flatpickr(input, options);
-const startBtn = document.getElementById('start-btn');
-
-const picker = flatpickr('#datetime-picker', {
+flatpickr(datePicker, {
   enableTime: true,
   time_24hr: true,
   defaultDate: new Date(),
   minuteIncrement: 1,
   onClose(selectedDates) {
     const selectedDate = selectedDates[0];
-    const now = new Date();
 
-    if (selectedDate <= now) {
+    if (selectedDate < new Date()) {
       window.alert('Please choose a date in the future');
-      startBtn.disabled = true;
+      datePicker.value = '';
+      startButton.disabled = true;
     } else {
-      startBtn.disabled = false;
+      startButton.disabled = false;
     }
   },
 });
 
-// Start button click event handler
-startBtn.addEventListener('click', () => {
-  // Start the countdown
-  // ...
+startButton.addEventListener('click', startCountdown);
 
-  // Example code to update timer values every second (replace with your logic)
-  const timerValues = {
-    days: 1,
-    hours: 2,
-    minutes: 30,
-    seconds: 45,
-  };
+function startCountdown() {
+  const selectedDate = new Date(datePicker.value).getTime();
 
-  updateTimer(timerValues);
-});
+  startButton.disabled = true;
 
-const refs = {
-  days: document.querySelector('[data-days]'),
-  hours: document.querySelector('[data-hours]'),
-  minutes: document.querySelector('[data-minutes]'),
-  seconds: document.querySelector('[data-seconds]'),
-};
+  updateCountdown();
 
-// Function to update timer values
-function updateTimer(values) {
-  refs.days.textContent = formatValue(values.days);
-  refs.hours.textContent = formatValue(values.hours);
-  refs.minutes.textContent = formatValue(values.minutes);
-  refs.seconds.textContent = formatValue(values.seconds);
+  countdownInterval = setInterval(updateCountdown, 1000);
+
+  function updateCountdown() {
+    const currentDate = new Date().getTime();
+    const distance = selectedDate - currentDate;
+
+    if (distance <= 0) {
+      clearInterval(countdownInterval);
+      resetCountdown();
+      return;
+    }
+
+    const { days, hours, minutes, seconds } = convertMs(distance);
+
+    daysElement.textContent = addLeadingZero(days);
+    hoursElement.textContent = addLeadingZero(hours);
+    minutesElement.textContent = addLeadingZero(minutes);
+    secondsElement.textContent = addLeadingZero(seconds);
+  }
 }
 
-// Helper function to format timer values with leading zeros
-function formatValue(value) {
+function resetCountdown() {
+  daysElement.textContent = '00';
+  hoursElement.textContent = '00';
+  minutesElement.textContent = '00';
+  secondsElement.textContent = '00';
+  datePicker.value = '';
+  startButton.disabled = true;
+}
+
+function convertMs(ms) {
+  const second = 1000;
+  const minute = second * 60;
+  const hour = minute * 60;
+  const day = hour * 24;
+
+  const days = Math.floor(ms / day);
+  const hours = Math.floor((ms % day) / hour);
+  const minutes = Math.floor(((ms % day) % hour) / minute);
+  const seconds = Math.floor((((ms % day) % hour) % minute) / second);
+
+  return { days, hours, minutes, seconds };
+}
+
+function addLeadingZero(value) {
   return value.toString().padStart(2, '0');
 }
-
-// const refs = {
-//   startBtn: document.querySelector('button[data-start]'),
-//   timerFace: document.querySelector('.timer'),
-// };
-
-// const timer = {
-//   intervalId: null,
-//   isActive: false,
-//   start() {
-//     if (isActive) {
-//       return;
-//     }
-//     const startTime = Date.now();
-
-//     setInterval(() => {
-//       const currentTime = Date.now();
-//       const deltaTime = currentTime - startTime;
-//       const { hours, mins, secs } = getTimeComponents(deltaTime);
-
-//       console.log(`${hours} : ${min} : ${secs}`);
-//     }, 1000);
-//   },
-//   stop() {
-//     clearInterval();
-//   },
-// };
-
-// refs.startBtn.addEventListener('click', () => {
-//   timer.start();
-// });
-
-// function updateClockFace({ hours, min, secs }) {
-//   refs.timerFace.textContent = `${hours} : ${min} : ${secs}`;
-// }
-// // (Обновляет значения в интерфейсе)
