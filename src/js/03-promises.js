@@ -11,13 +11,13 @@ function createPromise(position, delay) {
   });
 }
 
-const form = document.querySelector('form');
+const form = document.querySelector('.form');
 form.addEventListener('submit', function (event) {
   event.preventDefault();
 
-  const delayInput = this.elements.delay;
-  const stepInput = this.elements.step;
-  const amountInput = this.elements.amount;
+  const delayInput = event.target.elements.delay;
+  const stepInput = event.target.elements.step;
+  const amountInput = event.target.elements.amount;
 
   const delay = Number(delayInput.value);
   const step = Number(stepInput.value);
@@ -35,5 +35,5 @@ form.addEventListener('submit', function (event) {
     delay += step;
   }
 
-  this.reset();
+  event.target.reset();
 });
