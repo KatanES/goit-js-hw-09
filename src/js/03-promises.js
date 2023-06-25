@@ -43,5 +43,3 @@ form.addEventListener('submit', function (event) {
 
   this.reset();
 });
-
-console.log('Hello!');
