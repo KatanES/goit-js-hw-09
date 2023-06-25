@@ -16,6 +16,17 @@ flatpickr(datePicker, {
   defaultDate: new Date(),
   minuteIncrement: 1,
   onClose(selectedDates) {
+    if (selectedDates && selectedDates.length > 0) {
+      const selectedDate = selectedDates[0];
+
+      if (selectedDate < new Date()) {
+        window.alert('Please choose a date in the future');
+        datePicker.value = '';
+        startButton.disabled = true;
+      } else {
+        startButton.disabled = false;
+      }
+    }
     const selectedDate = selectedDates[0];
 
     if (selectedDate < new Date()) {
